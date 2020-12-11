@@ -2,6 +2,8 @@
 
 namespace Modules\AdminUser\Services;
 
+use Modules\AdminUser\Entities\AdminUser;
+
 abstract class BaseService
 {
 
@@ -30,6 +32,11 @@ abstract class BaseService
     public function get($with = [])
     {
         return $this->model->with($with)->get();
+    }
+
+    public function getByKeyValue($key, $value)
+    {
+        return $this->model->where($key, $value)->first();
     }
 
     /**
@@ -129,10 +136,7 @@ abstract class BaseService
      */
     public function deleteMultiple($ids)
     {
-        foreach ($ids as $id) {
-            $this->getById($id)->delete();
-        }
 
-        return true;
+        return $this->model->whereIn('id', $ids)->delete();
     }
 }

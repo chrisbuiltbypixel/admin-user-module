@@ -6,7 +6,7 @@ use Modules\AdminUser\Services\AdminUserService;
 use Modules\AdminUser\Http\Resources\Api\AdminUserResource;
 use Modules\AdminUser\Http\Resources\Api\AdminUserListResource;
 use Modules\AdminUser\Http\Requests\Api\UpdateAdminUserRequest;
-use Illuminate\Support\Facades\Log;
+use Modules\AdminUser\Http\Requests\Api\StoreAdminUserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -54,13 +54,7 @@ class AdminUserController extends Controller
     {
         $attributes = $request->all();
 
-        try {
-            $this->service->store($attributes);
-            return response()->success('This action has been completed successfully');
-        } catch (\Exception $e) {
-            Log::info($e->getMessage());
-            return response()->error('This action could not be completed');
-        }
+        return $this->service->store($attributes);
 
     }
 
@@ -86,7 +80,6 @@ class AdminUserController extends Controller
      */
     public function show($id)
     {
-
         return new AdminUserResource($this->service->getById($id));
     }
 
@@ -102,13 +95,9 @@ class AdminUserController extends Controller
 
         $attributes = $request->all();
 
-        try {
-            $this->service->update($id, $attributes);
-            return response()->success('This action has been completed successfully');
-        } catch (\Exception $e) {
-            Log::info($e->getMessage());
-            return response()->error('This action could not be completed');
-        }
+        $this->service->update($id, $attributes);
+
+        return $this->service->getById($id);
     }
 
     /**
@@ -119,16 +108,7 @@ class AdminUserController extends Controller
      */
     public function destroy(Request $request)
     {
-
-        try {
-            $attributes = $request->json()->all();
-            $this->service->destroy($attributes);
-            return response()->success('This action has been completed successfully');
-        } catch (\Exception $e) {
-            Log::info($e->getMessage());
-            return response()->error('This action could not be completed');
-        }
-
+        $this->service->deleteMultiple($request->id);
     }
 
 }
