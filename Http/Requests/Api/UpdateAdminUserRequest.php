@@ -27,6 +27,7 @@ class UpdateAdminUserRequest extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
+            'password' => 'sometimes|confirmed',
         ];
 
     }

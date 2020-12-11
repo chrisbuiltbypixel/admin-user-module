@@ -20,7 +20,8 @@ Route::group(['middleware' => 'auth:admin_api'], function () {
     Route::put('admin-users/{id}', 'Api\AdminUserController@update');
     Route::delete('admin-users', 'Api\AdminUserController@destroy');
 
-    // USER ENDPOINTS
     Route::get('auth/current', 'Api\AdminUserController@currentUser');
+
+    Route::put('auth/current/update-password', "Api\AdminUserController@updatePassword");
 
 });

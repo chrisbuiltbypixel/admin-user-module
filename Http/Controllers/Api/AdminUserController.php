@@ -93,7 +93,7 @@ class AdminUserController extends Controller
     public function update($id, UpdateAdminUserRequest $request)
     {
 
-        $attributes = $request->all();
+        $attributes = $request->validated();
 
         $this->service->update($id, $attributes);
 

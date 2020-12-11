@@ -4,6 +4,7 @@ namespace Modules\AdminUser\Tests\Feature\Nucleus;
 
 use Modules\AdminUser\Tests\TestCase;
 use Modules\AdminUser\Entities\AdminUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminUserTest extends TestCase
@@ -15,6 +16,13 @@ class AdminUserTest extends TestCase
         parent::setUp();
         $this->actAsAdminUser();
         $this->withoutExceptionHandling();
+    }
+
+    public function test_we_can_get_the_current_logged_in_user()
+    {
+        $response = $this->get('api/auth/current');
+
+        $response->assertStatus(200);
     }
 
     public function test_we_get_can_a_list_of_admin_users()
@@ -59,6 +67,8 @@ class AdminUserTest extends TestCase
             'first_name' => "New First Name",
             'last_name' => "New Last Name",
             'email' => 'new@example.org',
+            'password' => 'updated',
+            'password_confirmation' => 'updated',
         ];
 
         $response = $this->put("api/admin-users/$user->id", $data);
@@ -70,6 +80,21 @@ class AdminUserTest extends TestCase
         $this->assertEquals($data['first_name'], $user->first_name);
         $this->assertEquals($data['last_name'], $user->last_name);
         $this->assertEquals($data['email'], $user->email);
+
+    }
+
+    public function test_we_can_update_a_logged_in_users_password()
+    {
+        $data = [
+            'old_password' => "password",
+            'new_password' => "NewPassword",
+        ];
+
+        $user = Auth::guard('admin_api')->user();
+
+        $response = $this->put("api/auth/current/update-password", $data);
+
+        $response->assertStatus(200);
 
     }
 

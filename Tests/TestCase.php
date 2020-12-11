@@ -28,7 +28,9 @@ abstract class TestCase extends BaseTestCase
 
     public function actAsAdminUser()
     {
-        $user = AdminUser::factory()->create();
+        $user = AdminUser::factory()->create([
+            'password' => 'password',
+        ]);
 
         // log in the user
         return Passport::actingAs(
