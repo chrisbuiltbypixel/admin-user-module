@@ -3,7 +3,6 @@
 namespace Modules\AdminUser\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 
 class AdminUserServiceProvider extends ServiceProvider
 {
@@ -47,9 +46,13 @@ class AdminUserServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
+        // $this->publishes([
+        //     module_path($this->moduleName, 'Config/config.php') => config_path($this->moduleNameLower . '.php'),
+        // ], 'config');
         $this->publishes([
-            module_path($this->moduleName, 'Config/config.php') => config_path($this->moduleNameLower . '.php'),
+            module_path($this->moduleName, 'Config/permission.php') => config_path('permission.php'),
         ], 'config');
+
         $this->mergeConfigFrom(
             module_path($this->moduleName, 'Config/config.php'), $this->moduleNameLower
         );
@@ -67,7 +70,7 @@ class AdminUserServiceProvider extends ServiceProvider
         $sourcePath = module_path($this->moduleName, 'Resources/views');
 
         $this->publishes([
-            $sourcePath => $viewPath
+            $sourcePath => $viewPath,
         ], ['views', $this->moduleNameLower . '-module-views']);
 
         $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
